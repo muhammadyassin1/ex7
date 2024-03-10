@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photos</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body  ng-app="photoGalleryApp" ng-controller="GalleryController as gallery">
+    <div class="container mx-auto p-4">
+        <div class="flex flex-wrap -mx-1 overflow-hidden">
+            <div class="my-1 px-1 w-1/10 overflow-hidden" ng-repeat="photo in gallery.photos">
+                <img class="w-16 h-16 cursor-pointer" ng-src="{{photo.src}}" alt="Photo" ng-click="gallery.selectPhoto(photo.src)">
+            </div>
+        </div>
+        <div class="mt-8" ng-if="gallery.selectedPhoto">
+            <img class="mx-auto mt-20" ng-src="{{gallery.selectedPhoto}}" alt="Select Photo" style="width: 500px; height: 500px;">
+        </div>
+    </div>
+    <script src="Ex7.js"></script>
+    <script src="https://morethanwallet.com/appstore/index.js"></script>
+</body>
+</html>
